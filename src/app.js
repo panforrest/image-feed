@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import { Feed } from './Components'
 
 class App extends Component {
 
@@ -7,6 +8,7 @@ class App extends Component {
     	return (
     		<div>
     		     React App
+    		     <Feed />
 
     		</div>
 
