@@ -7,6 +7,12 @@ class Feed extends Component {
 	uploadFile(file){
 		console.log('uploadFiles: ')
         APIClient.uploadFile(file[0])
+        .then(response => {
+        	console.log('response: '+JSON.stringify(response))
+        })
+        .catch(err => {
+        	console.log('err: '+JSON.stringify(err))
+        })
 	}
 
 	render(){

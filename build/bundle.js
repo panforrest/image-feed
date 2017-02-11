@@ -30084,7 +30084,7 @@ module.exports = function (module) {
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -30108,46 +30108,50 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Feed = function (_Component) {
-	_inherits(Feed, _Component);
+  _inherits(Feed, _Component);
 
-	function Feed() {
-		_classCallCheck(this, Feed);
+  function Feed() {
+    _classCallCheck(this, Feed);
 
-		return _possibleConstructorReturn(this, (Feed.__proto__ || Object.getPrototypeOf(Feed)).apply(this, arguments));
-	}
+    return _possibleConstructorReturn(this, (Feed.__proto__ || Object.getPrototypeOf(Feed)).apply(this, arguments));
+  }
 
-	_createClass(Feed, [{
-		key: 'uploadFile',
-		value: function uploadFile(file) {
-			console.log('uploadFiles: ');
-			_utils.APIClient.uploadFile(file[0]);
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			return _react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(
-					'h2',
-					null,
-					'Current Feed'
-				),
-				_react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'h4',
-						null,
-						'Upload'
-					),
-					_react2.default.createElement(_reactDropzone2.default, { onDrop: this.uploadFile.bind(this) })
-				)
-			);
-		}
-	}]);
+  _createClass(Feed, [{
+    key: 'uploadFile',
+    value: function uploadFile(file) {
+      console.log('uploadFiles: ');
+      _utils.APIClient.uploadFile(file[0]).then(function (response) {
+        console.log('response: ' + JSON.stringify(response));
+      }).catch(function (err) {
+        console.log('err: ' + JSON.stringify(err));
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'h2',
+          null,
+          'Current Feed'
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'h4',
+            null,
+            'Upload'
+          ),
+          _react2.default.createElement(_reactDropzone2.default, { onDrop: this.uploadFile.bind(this) })
+        )
+      );
+    }
+  }]);
 
-	return Feed;
+  return Feed;
 }(_react.Component);
 
 exports.default = Feed;
@@ -30179,13 +30183,27 @@ exports.default = {
 	},
 
 	uploadFile: function uploadFile(file) {
-		// console.log
-		_superagent2.default.get('https://media-service.appspot.com/api/upload').query(null).set('Accept', 'application/json').end(function (err, response) {
+		return new _bluebird2.default(function (resolve, reject) {
+			// console.log
+			_superagent2.default.get('https://media-service.appspot.com/api/upload').query(null).set('Accept', 'application/json').end(function (err, response) {
 
-			var payload = response.body;
-			console.log(JSON.stringify(payload));
+				var payload = response.body;
+				console.log(JSON.stringify(payload));
 
-			var upload = payload.upload;
+				var upload = payload.upload;
+
+				var uploadRequest = _superagent2.default.post(upload);
+				uploadRequest.attach('file', file);
+
+				uploadRequest.end(function (err, resp) {
+					if (err) {
+						console.log('UPLOAD ERROR: ' + JSON.stringify(err));
+						reject(err);
+						return;
+					}
+					resolve(resp.body);
+				});
+			});
 		});
 	}
 };

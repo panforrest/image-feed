@@ -10,17 +10,32 @@ export default {
 	},
 
 	uploadFile: (file) => {
-		// console.log
-		superagent
-		.get('https://media-service.appspot.com/api/upload')
-		.query(null)
-		.set('Accept', 'application/json')
-		.end((err, response) => {
+		return new Promise((resolve, reject) => {
+			// console.log
+			superagent
+			.get('https://media-service.appspot.com/api/upload')
+			.query(null)
+			.set('Accept', 'application/json')
+			.end((err, response) => {
 
-			const payload = response.body
-			console.log(JSON.stringify(payload))
+				const payload = response.body
+				console.log(JSON.stringify(payload))
 
-			const upload = payload.upload
+				const upload = payload.upload
+
+				var uploadRequest = superagent.post(upload)
+				uploadRequest.attach('file', file)
+
+				uploadRequest.end((err, resp) => {
+					if (err){
+						console.log('UPLOAD ERROR: '+JSON.stringify(err))
+						reject(err)
+						return
+					}
+					resolve(resp.body)
+				})
+			})			
 		})
+
 	}
 }
