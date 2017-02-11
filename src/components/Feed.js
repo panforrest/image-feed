@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
 import Dropzone from 'react-dropzone'
+import { APIClient } from '../utils'
 
 class Feed extends Component {
+
+	uploadFile(file){
+		console.log('uploadFiles: ')
+	}
 
 	render(){
 		return(
@@ -12,7 +17,7 @@ class Feed extends Component {
                 <div>
                     <h4>Upload</h4>
 
-                    <Dropzone />
+                    <Dropzone onDrop={this.uploadFile.bind(this)} />
 
                 </div>
 			</div>
