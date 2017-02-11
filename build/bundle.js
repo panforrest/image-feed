@@ -30118,8 +30118,9 @@ var Feed = function (_Component) {
 
 	_createClass(Feed, [{
 		key: 'uploadFile',
-		value: function uploadFile(files) {
+		value: function uploadFile(file) {
 			console.log('uploadFiles: ');
+			_utils.APIClient.uploadFile(file[0]);
 		}
 	}, {
 		key: 'render',
@@ -30175,6 +30176,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = {
 	get: function get(url, params) {
 		return new _bluebird2.default(function (resolve, reject) {});
+	},
+
+	uploadFile: function uploadFile(file) {
+		// console.log
+		_superagent2.default.get('https://media-service.appspot.com/api/upload').query(null).set('Accept', 'application/json').end(function (err, response) {
+
+			var payload = response.body;
+			console.log(JSON.stringify(payload));
+
+			var upload = payload.upload;
+		});
 	}
 };
 

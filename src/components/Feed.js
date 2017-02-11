@@ -6,6 +6,7 @@ class Feed extends Component {
 
 	uploadFile(file){
 		console.log('uploadFiles: ')
+        APIClient.uploadFile(file[0])
 	}
 
 	render(){
